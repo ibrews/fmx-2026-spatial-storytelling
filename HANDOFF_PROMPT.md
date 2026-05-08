@@ -5,11 +5,11 @@
 
 ---
 
-## Recommended model
+## Model note
 
-**Use Sonnet 4.5** (not Opus 4.7, not Sonnet 4.6). Alex reports that the session quality degraded noticeably after Opus 4.6 was retired and 4.7/Sonnet 4.6 replaced it. The specific failure patterns were: ignoring explicit file specifications in favor of "better" alternatives found in documentation, and failing to cross-reference available data (videos.json) before building slides. These are attention and instruction-following issues, not capability issues. Sonnet 4.5 (`claude-sonnet-4-5`) is the recommended fallback; if unavailable, use Haiku 4.5 for simple edits and Opus 4.7 only for architecture decisions where you need to reason through complex tradeoffs.
+Available models as of session 4: **Opus 4.7** (`claude-opus-4-7`), **Sonnet 4.6** (`claude-sonnet-4-6`), **Haiku 4.5** (`claude-haiku-4-5-20251001`). Alex found session quality better before Opus 4.7 shipped — the exact prior model name is unclear. Try Opus 4.7 for complex multi-step work; Sonnet 4.6 for straightforward edits. The failures in Session 4 were instruction-following failures, not capability failures — the DO NOT list below is the real fix.
 
-**Before any session:** read POST_MORTEM.md. It documents specific failure modes from the FMX session that must not be repeated.
+**Before any session:** read POST_MORTEM.md.
 
 ---
 
