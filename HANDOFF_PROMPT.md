@@ -5,9 +5,13 @@
 
 ---
 
-## Model note
+## Recommended model
 
-Available models as of session 4: **Opus 4.7** (`claude-opus-4-7`), **Sonnet 4.6** (`claude-sonnet-4-6`), **Haiku 4.5** (`claude-haiku-4-5-20251001`). Alex found session quality better before Opus 4.7 shipped — the exact prior model name is unclear. Try Opus 4.7 for complex multi-step work; Sonnet 4.6 for straightforward edits. The failures in Session 4 were instruction-following failures, not capability failures — the DO NOT list below is the real fix.
+**Try Opus 4.6 Legacy (`claude-opus-4-6`) first.** Alex reports it was significantly more reliable for these tasks than Opus 4.7 or Sonnet 4.6. It's still available in the model picker as "Opus 4.6 Legacy." Note: Anthropic may have adjusted it since 4.7 shipped, so results may vary — but it's the best starting point.
+
+Available models: Opus 4.7 (`claude-opus-4-7`), **Opus 4.6 Legacy (`claude-opus-4-6`)**, Sonnet 4.6 (`claude-sonnet-4-6`), Haiku 4.5 (`claude-haiku-4-5-20251001`).
+
+The Session 4 failures were instruction-following failures, not capability failures — the DO NOT list below is the real fix regardless of model.
 
 **Before any session:** read POST_MORTEM.md.
 
