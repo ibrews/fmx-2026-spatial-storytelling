@@ -1,0 +1,40 @@
+[
+  {
+    "slide": 43,
+    "objectId": "g3dd8e2001a2_0_2879",
+    "pos": {
+      "l": 0,
+      "t": 0,
+      "w": 100,
+      "h": 100
+    },
+    "type": "video",
+    "source": "YOUTUBE",
+    "videoId": "NYSwJZsfzDc",
+    "url": "http://www.youtube.com/watch?v=NYSwJZsfzDc",
+    "start": null,
+    "end": null,
+    "autoPlay": false,
+    "mute": false,
+    "outline": {
+      "weight": {
+        "magnitude": 9525,
+        "unit": "EMU"
+      },
+      "dashStyle": "SOLID",
+      "outlineFill": {
+        "solidFill": {
+          "alpha": 1,
+          "color": {
+            "rgbColor": {
+              "red": 0.34901962,
+              "green": 0.34901962,
+              "blue": 0.34901962
+            }
+          }
+        }
+      },
+      "propertyState": "NOT_RENDERED"
+    }
+  }
+]
