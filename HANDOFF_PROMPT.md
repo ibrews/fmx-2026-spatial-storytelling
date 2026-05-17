@@ -19,7 +19,7 @@ The Session 4 failures were instruction-following failures, not capability failu
 
 ## Current state
 
-**120 slides** across **10 sections** + BONUS (hidden).
+**116 slides** across **10 sections** + BONUS (hidden). (Was 120 — removed 3 blank/dup slides at start of Year 5 and the Live demo placeholder per David's post-FMX notes.)
 
 | # | URL hash | Section |
 |---|---|---|
