@@ -1365,8 +1365,14 @@ SECTIONS.forEach((sec,si)=>{
   const lessonIV=lessons[3];if(!lessonIV)return;
   const t=lessonIV.querySelector('.lesson-title');
   const tl=lessonIV.querySelector('.lesson-tagline');
-  if(t)t.style.transform='translate(-7px,62px)';
   if(tl)tl.style.display='none';
+  document.fonts.ready.then(()=>{
+    if(!t)return;
+    t.style.transform='';
+    const sr=lessonIV.getBoundingClientRect(),tr=t.getBoundingClientRect();
+    const dx=sr.width*0.35-(tr.left-sr.left),dy=sr.height*0.421-(tr.top-sr.top);
+    t.style.transform=`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px)`;
+  });
 })();
 
 // Lesson I: add Agile Lens logo + excitement (per annotation feedback)
