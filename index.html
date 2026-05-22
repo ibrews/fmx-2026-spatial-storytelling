@@ -660,13 +660,18 @@ body.split-view #deck{bottom:42vh!important}
 body.split-view #notes-drawer{transform:none!important;pointer-events:all;max-height:42vh;height:42vh;overflow-y:auto}
 body.split-view #brand{bottom:calc(42vh + 6px)!important}
 body.split-view .nav-arrows{bottom:calc(42vh + 4px)!important}
-/* === ?present MODE — single-window presenter (slide ~80vh + compact script ribbon 20vh) === */
-body.present-mode #deck{bottom:20vh}
+/* === ?present MODE — single-window presenter (resizable slide + script ribbon) === */
+body.present-mode{--ribbon-vh:10;--present-scale:calc(1 - var(--ribbon-vh) * 0.01)}
+body.present-mode #deck{bottom:0}
+body.present-mode #deck>.slide{transform:scale(var(--present-scale));transform-origin:top center}
 body.present-mode #counter,body.present-mode #brand,body.present-mode #notes-drawer,body.present-mode #mobile-ui-toggle,body.present-mode #slide-grid-zone,body.present-mode #slide-grid,body.present-mode #search-overlay{display:none!important}
-body.present-mode .nav-arrows{bottom:calc(20vh + 8px);opacity:.7;z-index:600}
-body.present-mode #step-indicator{bottom:calc(20vh + 4px)}
-#present-ribbon{display:none;position:fixed;bottom:0;left:0;right:0;height:20vh;z-index:500;background:rgba(6,8,16,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(0,212,255,.25);flex-direction:column;font-family:var(--font);color:rgba(240,244,255,.85)}
+body.present-mode .nav-arrows{bottom:calc(var(--ribbon-vh) * 1vh + 8px);opacity:.7;z-index:600;transition:none}
+body.present-mode #step-indicator{bottom:calc(var(--ribbon-vh) * 1vh + 4px)}
+#present-ribbon{display:none;position:fixed;bottom:0;left:0;right:0;height:calc(var(--ribbon-vh,10) * 1vh);z-index:500;background:rgba(6,8,16,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(0,212,255,.25);flex-direction:column;font-family:var(--font);color:rgba(240,244,255,.85)}
 body.present-mode #present-ribbon{display:flex}
+.pr-grip{height:6px;flex-shrink:0;cursor:ns-resize;background:rgba(0,212,255,.18);border-bottom:1px solid rgba(0,212,255,.25);position:relative;transition:background .15s;touch-action:none}
+.pr-grip:hover,.pr-grip.dragging{background:rgba(0,212,255,.45)}
+.pr-grip:after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:2px;background:rgba(240,244,255,.4);border-radius:2px}
 .pr-head{display:flex;justify-content:space-between;align-items:center;padding:7px 22px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
 .pr-meta{display:flex;align-items:center;gap:8px;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,244,255,.5)}
 .pr-num{color:var(--teal)}
@@ -676,11 +681,12 @@ body.present-mode #present-ribbon{display:flex}
 .pr-tab{background:none;border:none;color:rgba(240,244,255,.5);font:inherit;font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;cursor:pointer;transition:background .15s,color .15s}
 .pr-tab.active{background:rgba(0,212,255,.18);color:var(--teal)}
 .pr-tab:not(.active):hover{color:rgba(240,244,255,.85)}
-.pr-body{flex:1;overflow-y:auto;padding:10px 22px 12px;font-size:1rem;line-height:1.5;white-space:pre-line;color:rgba(240,244,255,.88)}
+.pr-body{flex:1;overflow-y:auto;padding:10px 22px 12px;font-size:1rem;line-height:1.5;white-space:pre-line;color:rgba(240,244,255,.88);overscroll-behavior:contain}
 .pr-bullets{list-style:none;padding:0;margin:0;white-space:normal}
 .pr-bullets li{padding:4px 0 4px 18px;position:relative;font-size:.96rem;line-height:1.45}
 .pr-bullets li:before{content:'';position:absolute;left:0;top:.65em;width:5px;height:5px;border-radius:50%;background:var(--teal);opacity:.7}
 .pr-empty{opacity:.5;font-style:italic;font-size:.9rem}
+body.pr-dragging,body.pr-dragging *{user-select:none!important;-webkit-user-select:none!important;cursor:ns-resize!important}
 @media (max-width:640px){.pr-body{font-size:.92rem;padding:8px 14px;line-height:1.45}.pr-head{padding:5px 14px}.pr-meta{font-size:.62rem;letter-spacing:.12em}}
 /* === CURRENT SLIDE PREVIEW (?notes companion) === */
 #na-slide-preview{overflow:hidden;transition:max-height .28s ease,opacity .28s ease,padding .28s ease;max-height:0;opacity:0;padding:0 14px;flex:0 0 auto}
@@ -1076,7 +1082,7 @@ body[data-bg-style="extreme"] .bg-overlay--extreme{display:block}
 <div id="search-overlay"><div id="search-box"><div class="srch-input-row"><span class="srch-icon">&#8981;</span><input type="text" id="search-input" placeholder="Search slides, topics, case studies..." autocomplete="off" spellcheck="false"><kbd class="srch-kbd">Esc</kbd></div><div id="srch-results"><div class="srch-empty">Type to search across all slides...</div></div><div class="srch-footer"><span id="srch-count"></span><span>&#8593;&#8595; navigate &middot; Enter jump &middot; Esc close</span></div></div></div>
 <button id="anno-toggle" title="Toggle annotation mode (A)">Annotate</button>
 <button id="move-toggle" title="Toggle move mode (M)">Move Mode</button>
-<div id="move-hud"><button class="mh-btn" id="move-undo" disabled>&#8630; Undo</button><button class="mh-btn" id="move-redo" disabled>&#8631; Redo</button><span class="mh-sep">|</span><button class="mh-btn" id="z-front" title="Send to Front">&#9650;&#9650;</button><button class="mh-btn" id="z-fwd" title="Send Forward">&#9650;</button><button class="mh-btn" id="z-bwd" title="Send Backward">&#9660;</button><button class="mh-btn" id="z-back" title="Send to Back">&#9660;&#9660;</button><span class="mh-hint">Drag = move &middot; <kbd>Shift</kbd>drag = scale &middot; <kbd>Alt</kbd>drag = rotate</span></div>
+<div id="move-hud"><button class="mh-btn" id="move-undo" disabled>&#8630; Undo</button><button class="mh-btn" id="move-redo" disabled>&#8631; Redo</button><span class="mh-sep">|</span><button class="mh-btn" id="z-front" title="Send to Front">&#9650;&#9650;</button><button class="mh-btn" id="z-fwd" title="Send Forward">&#9650;</button><button class="mh-btn" id="z-bwd" title="Send Backward">&#9660;</button><button class="mh-btn" id="z-back" title="Send to Back">&#9660;&#9660;</button><span class="mh-hint">Drag = move &middot; <kbd>Shift</kbd>drag = scale &middot; <kbd>Alt</kbd>drag = rotate &middot; <kbd>C</kbd>+drag = crop</span></div>
 <div id="anno-panel"><h3>Annotations</h3><div id="anno-list"></div><div class="anno-actions"><button class="anno-btn" id="anno-export">Copy All</button><button class="anno-btn danger" id="anno-clear">Clear</button></div></div>
 <div id="anno-prompt"><div class="anno-target" id="anno-target-text"></div><textarea id="anno-text" placeholder="What should change?"></textarea><div class="anno-prompt-actions"><button class="anno-btn" id="anno-cancel" style="flex:0">Cancel</button><button class="anno-btn" id="anno-save" style="flex:0">Save</button></div></div>
 <div id="anno-toast"></div>
@@ -2382,7 +2388,7 @@ function aRender(){const list=document.getElementById('anno-list');const items=a
 function annoToggle(on){annoMode=on===undefined?!annoMode:on;document.body.classList.toggle('annotate-mode',annoMode);document.getElementById('anno-toggle').classList.toggle('active',annoMode);document.getElementById('anno-toggle').textContent=annoMode?'Exit Annotate':'Annotate';document.getElementById('anno-panel').classList.toggle('visible',annoMode);if(annoMode)aRender();if(!annoMode)document.getElementById('anno-prompt').classList.remove('visible');}
 document.getElementById('anno-toggle').addEventListener('click',()=>annoToggle());
 document.addEventListener('keydown',e=>{if((e.key==='a'||e.key==='A')&&!['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)&&!document.activeElement?.isContentEditable){e.preventDefault();annoToggle();}});
-document.addEventListener('click',e=>{if(!annoMode)return;if(e.target.closest('#anno-toggle,#anno-panel,#anno-prompt,#anno-toast,.layout-grid'))return;e.preventDefault();e.stopPropagation();pendingTarget=e.target;const sl=e.target.closest('.slide');const isBackground=sl&&(e.target===sl||e.target.classList.contains('slide'));let posInfo='';if(isBackground&&sl){const r=sl.getBoundingClientRect();const pctL=((e.clientX-r.left)/r.width*100).toFixed(1);const pctT=((e.clientY-r.top)/r.height*100).toFixed(1);const idx=[...document.querySelectorAll('#deck > .slide')].indexOf(sl);const ty=sl.dataset.type||'?',yr=sl.dataset.year||'';const gridVis=sl.querySelector('.layout-grid');let zone='';if(gridVis){const col=Math.min(3,Math.floor((e.clientX-r.left)/r.width*4));const row=Math.min(2,Math.floor((e.clientY-r.top)/r.height*3));zone=' Zone: '+String.fromCharCode(65+row)+(col+1);}posInfo=`POSITION: left:${pctL}%, top:${pctT}% (on slide #${idx+1}, type: ${ty}${yr?', year: '+yr:''})${zone}`;}window._pendingPosInfo=posInfo;document.getElementById('anno-target-text').textContent=posInfo||(aCtx(e.target)||'')+' > '+aSel(e.target);const pr=document.getElementById('anno-prompt');pr.style.left=Math.min(e.clientX+10,innerWidth-300)+'px';pr.style.top=Math.min(e.clientY+10,innerHeight-200)+'px';pr.classList.add('visible');document.getElementById('anno-text').value='';setTimeout(()=>document.getElementById('anno-text').focus(),50);},true);
+document.addEventListener('click',e=>{if(!annoMode)return;if(e.target.closest('#anno-toggle,#anno-panel,#anno-prompt,#anno-toast,.layout-grid'))return;e.preventDefault();e.stopPropagation();pendingTarget=e.target;const sl=e.target.closest('.slide');let posInfo='';if(sl){const r=sl.getBoundingClientRect();const pctL=((e.clientX-r.left)/r.width*100).toFixed(1);const pctT=((e.clientY-r.top)/r.height*100).toFixed(1);const idx=[...document.querySelectorAll('#deck > .slide')].indexOf(sl);const ty=sl.dataset.type||'?',yr=sl.dataset.year||'';const gridVis=sl.querySelector('.layout-grid');let zone='';if(gridVis){const col=Math.min(3,Math.floor((e.clientX-r.left)/r.width*4));const row=Math.min(2,Math.floor((e.clientY-r.top)/r.height*3));zone=' Zone: '+String.fromCharCode(65+row)+(col+1);}posInfo=`POSITION: left:${pctL}%, top:${pctT}% (on slide #${idx+1}, type: ${ty}${yr?', year: '+yr:''})${zone}`;}window._pendingPosInfo=posInfo;const tgt=document.getElementById('anno-target-text');const ctxLine=(aCtx(e.target)||'')+' > '+aSel(e.target);tgt.textContent=posInfo?posInfo+' · '+ctxLine:ctxLine;const pr=document.getElementById('anno-prompt');pr.style.left=Math.min(e.clientX+10,innerWidth-300)+'px';pr.style.top=Math.min(e.clientY+10,innerHeight-200)+'px';pr.classList.add('visible');document.getElementById('anno-text').value='';setTimeout(()=>document.getElementById('anno-text').focus(),50);},true);
 document.getElementById('anno-cancel').addEventListener('click',()=>{document.getElementById('anno-prompt').classList.remove('visible');pendingTarget=null;});
 document.getElementById('anno-save').addEventListener('click',()=>{const text=document.getElementById('anno-text').value.trim();if(!text||!pendingTarget)return;const arr=aL();const entry={selector:aSel(pendingTarget),context:aCtx(pendingTarget),text,timestamp:new Date().toISOString()};if(window._pendingPosInfo)entry.position=window._pendingPosInfo;if(window._lastTransformInfo){entry.transform=window._lastTransformInfo;window._lastTransformInfo='';}arr.push(entry);aS(arr);document.getElementById('anno-prompt').classList.remove('visible');pendingTarget=null;window._pendingPosInfo='';aRender();annoToast('Saved');});
 document.getElementById('anno-text').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();document.getElementById('anno-save').click();}if(e.key==='Escape')document.getElementById('anno-cancel').click();});
@@ -2449,9 +2455,15 @@ document.addEventListener('dblclick',e=>{if(!window._moveMode)return;if(e.target
 document.addEventListener('keydown',e=>{if(!editEl)return;if(e.key==='Escape'){e.preventDefault();endEdit(false);}if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();endEdit(true);}if(e.key==='Enter'&&e.shiftKey&&!e.metaKey&&!e.ctrlKey){e.preventDefault();document.execCommand('insertLineBreak');return;}if(e.key==='Enter'&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey&&editEl.tagName==='LI'){e.preventDefault();endEdit(true);const li=document.createElement('li');li.textContent='';editEl.after(li);editEl=li;li.setAttribute('contenteditable','true');document.body.classList.add('edit-text');li.focus();}if(e.key==='Backspace'&&editEl.tagName==='LI'&&editEl.innerText.trim()===''){e.preventDefault();const prev=editEl.previousElementSibling;editEl.removeAttribute('contenteditable');editEl.parentElement?.removeChild(editEl);editEl=null;if(prev){editEl=prev;prev.setAttribute('contenteditable','true');document.body.classList.add('edit-text');prev.focus();}else document.body.classList.remove('edit-text');}},true);
 document.addEventListener('mousedown',e=>{if(editEl&&!e.target.closest('[contenteditable="true"]'))endEdit(true);},true);
 // Drag
-document.addEventListener('mousedown',e=>{if(!window._moveMode)return;if(e.target.closest('#move-toggle,#anno-toggle,#slide-grid,#slide-grid-zone,#anno-panel,#anno-prompt,#move-hud,#anim-scrub-bar,#anno-toast,[contenteditable]'))return;e.preventDefault();e.stopPropagation();let el=e.target;const cntr=el.closest('.placed-item,.grid-item');if(e.metaKey||e.ctrlKey){const p=el.parentElement;if(p&&p.tagName!=='BODY')el=p;}else if(cntr)el=cntr;_lastMoveEl=el;const ss={...gX(el)};drag={el,mode:e.shiftKey?'scale':e.altKey?'rotate':'translate',sx:e.clientX,sy:e.clientY,ss,ps:{...ss},center:eC(el)};el.classList.add('dragging');},true);
-document.addEventListener('mousemove',e=>{if(!drag)return;const n={...drag.ss};if(drag.mode==='translate'){n.tx=drag.ss.tx+(e.clientX-drag.sx);n.ty=drag.ss.ty+(e.clientY-drag.sy);}else if(drag.mode==='scale'){const sd=Math.hypot(drag.sx-drag.center.x,drag.sy-drag.center.y)||1;const cd=Math.hypot(e.clientX-drag.center.x,e.clientY-drag.center.y);n.scale=Math.max(.1,drag.ss.scale*cd/sd);}else{const sa=Math.atan2(drag.sy-drag.center.y,drag.sx-drag.center.x);const ca=Math.atan2(e.clientY-drag.center.y,e.clientX-drag.center.x);n.rot=drag.ss.rot+(ca-sa)*180/Math.PI;}sX(drag.el,n);},true);
-document.addEventListener('mouseup',()=>{if(!drag)return;_lastMoveEl=drag.el;drag.el.classList.remove('dragging');const n=gX(drag.el),p=drag.ps;if(n.tx!==p.tx||n.ty!==p.ty||n.scale!==p.scale||n.rot!==p.rot){mH.push({el:drag.el,prev:{...p},next:{...n}});if(mH.length>50)mH.shift();mR.length=0;uMB();const _mSel=aSel(drag.el),_mCtx=aCtx(drag.el);const sl=drag.el.closest('.slide');if(sl){const sr=sl.getBoundingClientRect(),er=drag.el.getBoundingClientRect();const pctL=((er.left-sr.left)/sr.width*100).toFixed(1);const pctT=((er.top-sr.top)/sr.height*100).toFixed(1);const idx=[...document.querySelectorAll('#deck > .slide')].indexOf(sl);const parts=[`left:${pctL}%, top:${pctT}%`];if(Math.abs(n.scale-1)>0.01){const ow=parseFloat(drag.el.style.width)||0,oh=parseFloat(drag.el.style.height)||0;parts.push(`scale:${n.scale.toFixed(2)} \u2192 width:${(ow*n.scale).toFixed(1)}%, height:${(oh*n.scale).toFixed(1)}%`);}if(Math.abs(n.rot)>0.5)parts.push(`rotate:${n.rot.toFixed(1)}\u00b0`);const modeLabel=`TRANSFORM ${parts.join(' \u00b7 ')}`;const snippet=`/* Position: left:${pctL}%, top:${pctT}% on slide ${idx+1} */\nelement.style.cssText = 'position:absolute;left:${pctL}%;top:${pctT}%;';`;try{navigator.clipboard.writeText(snippet).then(()=>{annoToast(`\uD83D\uDCCB Position copied: left:${pctL}%, top:${pctT}%`);}).catch(()=>{annoToast(`Position: left:${pctL}%, top:${pctT}% (${er.left.toFixed(0)}px, ${er.top.toFixed(0)}px)`);});}catch(e){annoToast(`Position: left:${pctL}%, top:${pctT}%`);}window._lastTransformInfo=modeLabel;}const _dx=Math.abs(n.tx-p.tx),_dy=Math.abs(n.ty-p.ty),_ds=Math.abs(n.scale-p.scale),_dr=Math.abs(n.rot-p.rot);if(_dx<5&&_dy<5&&_ds<0.02&&_dr<1){sX(drag.el,p);drag.el.style.overflow='';mH.pop();drag=null;annoToast('No change');return;}const _mArr=aL();const _mIdx=_mArr.findIndex(a=>a.type==='move'&&a.selector===_mSel);const _mNote={selector:_mSel,context:_mCtx||'slide',timestamp:new Date().toISOString(),type:'move',transform:window._lastTransformInfo||''};if(_mIdx>=0)_mArr[_mIdx]=_mNote;else _mArr.push(_mNote);aS(_mArr);aRender();annoToast('Transform saved');}drag=null;},true);
+// Crop key (C) \u2014 when held in move mode, drag pans object-position of cropped media
+window._cropKey=false;
+document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)||document.activeElement?.isContentEditable)return;if(e.key==='c'||e.key==='C')window._cropKey=true;});
+document.addEventListener('keyup',e=>{if(e.key==='c'||e.key==='C')window._cropKey=false;});
+window.addEventListener('blur',()=>{window._cropKey=false;});
+function _findCropMedia(t){let n=t;for(let i=0;i<4&&n;i++){if((n.tagName==='IMG'||n.tagName==='VIDEO')&&getComputedStyle(n).objectFit==='cover')return n;n=n.parentElement;}if(t.tagName==='IMG'||t.tagName==='VIDEO'){return getComputedStyle(t).objectFit==='cover'?t:null;}const inner=t.querySelector?.('img,video');if(inner&&getComputedStyle(inner).objectFit==='cover')return inner;return null;}
+document.addEventListener('mousedown',e=>{if(!window._moveMode)return;if(e.target.closest('#move-toggle,#anno-toggle,#slide-grid,#slide-grid-zone,#anno-panel,#anno-prompt,#move-hud,#anim-scrub-bar,#anno-toast,[contenteditable]'))return;if(window._cropKey){const media=_findCropMedia(e.target);if(media){e.preventDefault();e.stopPropagation();const cs=getComputedStyle(media);const cur=media.style.objectPosition||cs.objectPosition||'50% 50%';const m=cur.match(/([\d.]+)%\s+([\d.]+)%/);const cx=m?parseFloat(m[1]):50,cy=m?parseFloat(m[2]):50;const r=media.getBoundingClientRect();drag={el:media,mode:'crop',sx:e.clientX,sy:e.clientY,op0:{x:cx,y:cy},opCur:{x:cx,y:cy},cr:{w:r.width||1,h:r.height||1}};media.classList.add('dragging');return;}}e.preventDefault();e.stopPropagation();let el=e.target;const cntr=el.closest('.placed-item,.grid-item');if(e.metaKey||e.ctrlKey){const p=el.parentElement;if(p&&p.tagName!=='BODY')el=p;}else if(cntr)el=cntr;_lastMoveEl=el;const ss={...gX(el)};drag={el,mode:e.shiftKey?'scale':e.altKey?'rotate':'translate',sx:e.clientX,sy:e.clientY,ss,ps:{...ss},center:eC(el)};el.classList.add('dragging');},true);
+document.addEventListener('mousemove',e=>{if(!drag)return;if(drag.mode==='crop'){const dxPct=(e.clientX-drag.sx)/drag.cr.w*100;const dyPct=(e.clientY-drag.sy)/drag.cr.h*100;const nx=Math.max(0,Math.min(100,drag.op0.x+dxPct));const ny=Math.max(0,Math.min(100,drag.op0.y+dyPct));drag.opCur={x:nx,y:ny};drag.el.style.objectPosition=`${nx.toFixed(1)}% ${ny.toFixed(1)}%`;return;}const n={...drag.ss};if(drag.mode==='translate'){n.tx=drag.ss.tx+(e.clientX-drag.sx);n.ty=drag.ss.ty+(e.clientY-drag.sy);}else if(drag.mode==='scale'){const sd=Math.hypot(drag.sx-drag.center.x,drag.sy-drag.center.y)||1;const cd=Math.hypot(e.clientX-drag.center.x,e.clientY-drag.center.y);n.scale=Math.max(.1,drag.ss.scale*cd/sd);}else{const sa=Math.atan2(drag.sy-drag.center.y,drag.sx-drag.center.x);const ca=Math.atan2(e.clientY-drag.center.y,e.clientX-drag.center.x);n.rot=drag.ss.rot+(ca-sa)*180/Math.PI;}sX(drag.el,n);},true);
+document.addEventListener('mouseup',()=>{if(!drag)return;if(drag.mode==='crop'){_lastMoveEl=drag.el;drag.el.classList.remove('dragging');const op=drag.opCur,p0=drag.op0;if(Math.abs(op.x-p0.x)<0.3&&Math.abs(op.y-p0.y)<0.3){drag=null;annoToast('No crop change');return;}const sel=aSel(drag.el),ctx=aCtx(drag.el);const opStr=`${op.x.toFixed(1)}% ${op.y.toFixed(1)}%`;const arr=aL();const idx=arr.findIndex(a=>a.type==='crop'&&a.selector===sel);const entry={selector:sel,context:ctx||'slide',timestamp:new Date().toISOString(),type:'crop',text:`object-position: ${opStr}`,position:`OBJECT-POSITION: ${opStr}`};if(idx>=0)arr[idx]=entry;else arr.push(entry);aS(arr);aRender();try{navigator.clipboard.writeText(`object-position: ${opStr};`).catch(()=>{});}catch(_){}annoToast(`\uD83D\uDDBC\uFE0F Crop: ${opStr}`);drag=null;return;}_lastMoveEl=drag.el;drag.el.classList.remove('dragging');const n=gX(drag.el),p=drag.ps;if(n.tx!==p.tx||n.ty!==p.ty||n.scale!==p.scale||n.rot!==p.rot){mH.push({el:drag.el,prev:{...p},next:{...n}});if(mH.length>50)mH.shift();mR.length=0;uMB();const _mSel=aSel(drag.el),_mCtx=aCtx(drag.el);const sl=drag.el.closest('.slide');if(sl){const sr=sl.getBoundingClientRect(),er=drag.el.getBoundingClientRect();const pctL=((er.left-sr.left)/sr.width*100).toFixed(1);const pctT=((er.top-sr.top)/sr.height*100).toFixed(1);const idx=[...document.querySelectorAll('#deck > .slide')].indexOf(sl);const parts=[`left:${pctL}%, top:${pctT}%`];if(Math.abs(n.scale-1)>0.01){const ow=parseFloat(drag.el.style.width)||0,oh=parseFloat(drag.el.style.height)||0;parts.push(`scale:${n.scale.toFixed(2)} \u2192 width:${(ow*n.scale).toFixed(1)}%, height:${(oh*n.scale).toFixed(1)}%`);}if(Math.abs(n.rot)>0.5)parts.push(`rotate:${n.rot.toFixed(1)}\u00b0`);const modeLabel=`TRANSFORM ${parts.join(' \u00b7 ')}`;const snippet=`/* Position: left:${pctL}%, top:${pctT}% on slide ${idx+1} */\nelement.style.cssText = 'position:absolute;left:${pctL}%;top:${pctT}%;';`;try{navigator.clipboard.writeText(snippet).then(()=>{annoToast(`\uD83D\uDCCB Position copied: left:${pctL}%, top:${pctT}%`);}).catch(()=>{annoToast(`Position: left:${pctL}%, top:${pctT}% (${er.left.toFixed(0)}px, ${er.top.toFixed(0)}px)`);});}catch(e){annoToast(`Position: left:${pctL}%, top:${pctT}%`);}window._lastTransformInfo=modeLabel;}const _dx=Math.abs(n.tx-p.tx),_dy=Math.abs(n.ty-p.ty),_ds=Math.abs(n.scale-p.scale),_dr=Math.abs(n.rot-p.rot);if(_dx<5&&_dy<5&&_ds<0.02&&_dr<1){sX(drag.el,p);drag.el.style.overflow='';mH.pop();drag=null;annoToast('No change');return;}const _mArr=aL();const _mIdx=_mArr.findIndex(a=>a.type==='move'&&a.selector===_mSel);const _mNote={selector:_mSel,context:_mCtx||'slide',timestamp:new Date().toISOString(),type:'move',transform:window._lastTransformInfo||''};if(_mIdx>=0)_mArr[_mIdx]=_mNote;else _mArr.push(_mNote);aS(_mArr);aRender();annoToast('Transform saved');}drag=null;},true);
 let _lastMoveEl=null;
 function mUndo(){if(!mH.length){annoToast('Nothing to undo');return;}const a=mH.pop();sX(a.el,a.prev);if(a.prev.tx===0&&a.prev.ty===0&&a.prev.scale===1&&a.prev.rot===0)a.el.style.overflow='';mR.push(a);annoToast('Undone');uMB();}
 function mRedo(){if(!mR.length){annoToast('Nothing to redo');return;}const a=mR.pop();sX(a.el,a.next);mH.push(a);annoToast('Redone');uMB();}
@@ -3584,12 +3596,34 @@ updateHUD();
 
 // =====================================================================
 // FEATURE: ?present MODE — single-window presenter view
-// Slide preview (~80vh) + compact 20vh speaker ribbon at the bottom.
-// Activated by ?present URL flag. Works on desktop and mobile.
+// Slide preview (scales to fit) + compact resizable speaker ribbon.
+// ?present[&ribbon=N] — N is ribbon height in vh, clamped to 5..80, default 10.
+// Drag the top edge of the ribbon to resize live; URL + localStorage update.
 // =====================================================================
 (function(){
-  if(!new URLSearchParams(location.search).has('present'))return;
+  const params=new URLSearchParams(location.search);
+  if(!params.has('present'))return;
   document.body.classList.add('present-mode');
+
+  const RIBBON_MIN=5, RIBBON_MAX=80, RIBBON_DEFAULT=10;
+  function clampRibbon(v){v=Number(v);if(!isFinite(v))return RIBBON_DEFAULT;return Math.max(RIBBON_MIN,Math.min(RIBBON_MAX,Math.round(v)));}
+  function readInitialRibbon(){
+    const urlV=params.get('ribbon');
+    if(urlV!==null)return clampRibbon(urlV);
+    try{const lsV=localStorage.getItem('sd-present-ribbon');if(lsV!==null)return clampRibbon(lsV);}catch(_){}
+    return RIBBON_DEFAULT;
+  }
+  function applyRibbon(vh){document.body.style.setProperty('--ribbon-vh',String(vh));}
+  function persistRibbon(vh){
+    try{localStorage.setItem('sd-present-ribbon',String(vh));}catch(_){}
+    const u=new URL(location.href);u.searchParams.set('present','');u.searchParams.set('ribbon',String(vh));
+    // strip empty present= back to bare flag for cleanliness
+    const qs=u.searchParams.toString().replace(/(^|&)present=(&|$)/,'$1present$2');
+    history.replaceState(null,'',u.pathname+'?'+qs+u.hash);
+  }
+  let ribbonVh=readInitialRibbon();
+  applyRibbon(ribbonVh);
+
   let prMode=(()=>{try{return localStorage.getItem('sd-present-mode')||'script';}catch(_){return'script';}})();
   function getSectionName(idx){const sl=allSlides[idx];if(!sl)return'';const sec=SECTIONS[+sl.dataset.section];return sec?.lesson?.short||sl.dataset.year||'';}
   function renderRibbon(){
@@ -3612,11 +3646,51 @@ updateHUD();
     document.querySelectorAll('.pr-tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===m));
     renderRibbon();
   }
+
   const r=document.createElement('div');r.id='present-ribbon';
-  r.innerHTML='<div class="pr-head"><span class="pr-meta"><span class="pr-num" id="pr-num">--</span><span class="pr-sep">·</span><span class="pr-section" id="pr-section">--</span></span><div class="pr-toggle"><button class="pr-tab" data-mode="script">Script</button><button class="pr-tab" data-mode="bullets">Bullets</button></div></div><div class="pr-body" id="pr-body"></div>';
+  r.innerHTML='<div class="pr-grip" id="pr-grip" title="Drag to resize · double-click to reset"></div><div class="pr-head"><span class="pr-meta"><span class="pr-num" id="pr-num">--</span><span class="pr-sep">·</span><span class="pr-section" id="pr-section">--</span></span><div class="pr-toggle"><button class="pr-tab" data-mode="script">Script</button><button class="pr-tab" data-mode="bullets">Bullets</button></div></div><div class="pr-body" id="pr-body"></div>';
   document.body.appendChild(r);
   r.querySelectorAll('.pr-tab').forEach(t=>t.addEventListener('click',()=>setMode(t.dataset.mode)));
   setMode(prMode);
+
+  // Drag-resize on grip (mouse + touch via pointer events)
+  const grip=r.querySelector('#pr-grip');
+  let dragStartY=0, dragStartVh=0, dragging=false;
+  function onDown(e){
+    dragging=true;dragStartY=(e.clientY!=null?e.clientY:e.touches?.[0]?.clientY)||0;dragStartVh=ribbonVh;
+    grip.classList.add('dragging');document.body.classList.add('pr-dragging');
+    if(e.pointerId!=null&&grip.setPointerCapture){try{grip.setPointerCapture(e.pointerId);}catch(_){}}
+    e.preventDefault();
+  }
+  function onMove(e){
+    if(!dragging)return;
+    const y=(e.clientY!=null?e.clientY:e.touches?.[0]?.clientY)||0;
+    const dy=dragStartY-y;
+    const dVh=(dy/window.innerHeight)*100;
+    ribbonVh=clampRibbon(dragStartVh+dVh);
+    applyRibbon(ribbonVh);
+  }
+  function onUp(){
+    if(!dragging)return;
+    dragging=false;grip.classList.remove('dragging');document.body.classList.remove('pr-dragging');
+    persistRibbon(ribbonVh);
+  }
+  if(window.PointerEvent){
+    grip.addEventListener('pointerdown',onDown);
+    window.addEventListener('pointermove',onMove);
+    window.addEventListener('pointerup',onUp);
+    window.addEventListener('pointercancel',onUp);
+  }else{
+    grip.addEventListener('mousedown',onDown);
+    window.addEventListener('mousemove',onMove);
+    window.addEventListener('mouseup',onUp);
+    grip.addEventListener('touchstart',onDown,{passive:false});
+    window.addEventListener('touchmove',onMove,{passive:false});
+    window.addEventListener('touchend',onUp);
+  }
+  // Double-click grip → reset to default
+  grip.addEventListener('dblclick',()=>{ribbonVh=RIBBON_DEFAULT;applyRibbon(ribbonVh);persistRibbon(ribbonVh);});
+
   // Hook slide changes so ribbon refreshes on next/prev
   const _prevUH=updateHUD;updateHUD=function(){_prevUH();renderRibbon();};
 })();
