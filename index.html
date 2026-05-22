@@ -8,6 +8,9 @@
 <meta property="og:title" content="Is XR Right For Your Project?">
 <meta property="og:description" content="3 lessons. 6 case studies. A framework for spatial decisions.">
 <meta property="og:image" content="https://ibrews.github.io/spatial-deck/social.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1950,6 +1953,28 @@ function shootFireball(svg,startX,startY,dir){
   const COLS=14,pileH=new Float32Array(COLS);
   let running=false,tid=null,qi=0,order=[];
   function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  // Popcorn burst — small gold flecks that pop outward when a quote lands
+  function popcornBurst(x,y,intensity){
+    const N=intensity||(7+Math.floor(Math.random()*4));
+    for(let i=0;i<N;i++){
+      const p=document.createElement('div');
+      const sz=2.5+Math.random()*3.5;
+      const c=GOLDS[Math.floor(Math.random()*GOLDS.length)];
+      p.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;border-radius:50%;background:${c};box-shadow:0 0 5px ${c},0 0 1px ${c};pointer-events:none;opacity:1;transform:translate(-50%,-50%);transition:transform .75s cubic-bezier(.22,.55,.5,1),opacity .75s ease-out;will-change:transform,opacity;`;
+      overlay.appendChild(p);
+      // Mostly upward + outward; gravity adds downward drift
+      const ang=-Math.PI/2+(Math.random()-.5)*Math.PI*0.95;
+      const dist=14+Math.random()*36;
+      const dx=Math.cos(ang)*dist;
+      const dy=Math.sin(ang)*dist+18+Math.random()*12;
+      const rot=(Math.random()-.5)*180;
+      requestAnimationFrame(()=>{
+        p.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${rot}deg) scale(${0.25+Math.random()*0.35})`;
+        p.style.opacity='0';
+      });
+      setTimeout(()=>p.remove(),820);
+    }
+  }
   function spawnQuote(){
     if(!running)return;
     if(qi>=order.length){order=shuffle([...Array(QUOTES.length).keys()]);qi=0;}
@@ -1971,6 +1996,8 @@ function shootFireball(svg,startX,startY,dir){
       if(landTop>sH*.08){for(let c=startCol;c<Math.min(startCol+spanCols,COLS);c++)pileH[c]=landFromBottom;}
       el.style.left=`${startCol*colW}px`;el.style.top=`${-(qH+20)}px`;el.style.visibility='visible';
       requestAnimationFrame(()=>{el.style.transition=`top ${fallDur}s cubic-bezier(.25,.05,.8,1)`;el.style.top=`${Math.max(sH*.08,landTop)}px`;});
+      // Pop a little gold burst at the landing point when the quote settles
+      el.addEventListener('transitionend',ev=>{if(ev.propertyName!=='top')return;popcornBurst(el.offsetLeft+el.offsetWidth/2,el.offsetTop+4);},{once:true});
     });
   }
   function spawnFrenzy(){
