@@ -66,7 +66,7 @@ const SECTIONS = [
 
   // \u2500\u2500 II \u2014 WHY LIVE? \u2500\u2500
   { year: 'II', accent: 'amber',
-    lesson: { title:'WHY LIVE?', short:'WHY LIVE', tagline:'What\u2019s the value of <em>live</em> spatial storytelling \u2014 when prerecorded is polished, predictable, on-demand?<br><br>This is the question that won\u2019t leave us alone.', tags:'PRESENCE \u00b7 LIVENESS \u00b7 ENERGY', notes:'I want to plant a question: why live? What\u2019s the value of live spatial storytelling, as opposed to prerecorded, polished and refined, where post-production ensures the audience gets exactly what you intended every time and on-demand?' },
+    lesson: { title:'WHY LIVE?', short:'WHY LIVE', tagline:'What\u2019s the value of <em>live</em> spatial storytelling \u2014 when prerecorded is polished, predictable, on-demand?', tags:'PRESENCE \u00b7 LIVENESS \u00b7 ENERGY', notes:'I want to plant a question: why live? What\u2019s the value of live spatial storytelling, as opposed to prerecorded, polished and refined, where post-production ensures the audience gets exactly what you intended every time and on-demand?' },
     cases: [
       { title:'2008 \u00b7 London', subtitle:'',
         layout:'full', img:'media/fmx/s17-00-77a8b214.png',
@@ -169,14 +169,14 @@ const SECTIONS = [
         ], notes:'the clothing, the sets,' },
       { title:'', subtitle:'',
         layout:'placed', placedImages:[
-          ['media/fmx/s04-00-1cb33fb0.png',0,10.67,70.93,78.75],
-          ['media/fmx/s04-01-29032317.mp4',71.61,10.58,28.40,78.75]
+          ['media/fmx/s04-00-1cb33fb0.png',3.6,11.7,70.93,78.75],
+          ['media/fmx/s04-01-29032317.mp4',54.0,1.8,34.3,95.1]
         ], notes:'the lighting' },
       { title:'', subtitle:'',
-        layout:'full', img:'media/fmx/s05-00-7a68c946.mp4',
+        layout:'full', img:'media/fmx/s05-00-7a68c946.mp4', mediaScale:0.69,
         notes:'The physics' },
       { title:'', subtitle:'',
-        layout:'full', img:'media/fmx/s06-00-b5d37188.mp4',
+        layout:'full', img:'media/fmx/s06-00-b5d37188.mp4', mediaScale:0.83,
         notes:'The physics' },
       { title:'', subtitle:'',
         layout:'grid', images:['media/fmx/s07-00-11dd0c87.png','media/fmx/s07-01-5a64f3cf.png'],
@@ -189,7 +189,8 @@ const SECTIONS = [
           ['media/fmx/s09-00-604b39a4.mp4',1.53,3.47,40.09,49.83],
           ['media/fmx/s09-01-1899f9b6.mp4',52.48,2.76,41.24,51.26],
           ['media/fmx/s09-02-8c2b36a1.mp4',52.48,55.09,41.24,41.59]
-        ], notes:'We brought in our star \u2014 Ari Tarr, who was at the time (and remains) very possibly the most experienced VR actor in the world.' },
+        ], overlayStyle:'left:3.9%;top:82.7%;bottom:auto;transform:scale(1.34);transform-origin:top left',
+        notes:'We brought in our star \u2014 Ari Tarr, who was at the time (and remains) very possibly the most experienced VR actor in the world.' },
       { title:'', subtitle:'',
         layout:'grid', images:['media/fmx/s10-01-4004937f.png','media/fmx/s10-00-b68faab7.jpg'],
         notes:'We worked with the theatre to cut the script down for VR\u2026 one limitation of VR live shows is cognitive load and comfort \u2014 how long can you ask people to wear a VR headset for? \u2026not more than an hour.' },
@@ -1172,7 +1173,7 @@ function playBing(){try{const c=sfxCtx(),t=c.currentTime,o=c.createOscillator(),
 
 // Settings slide (slot 0, hidden)
 (function(){
-  const D={paraGap:.2,taglineScale:1.4,titleScale:1,imgDur:6,primaryColor:'#00d4ff',secondaryColor:'#a78bfa',bgDark:'#060810',fontFamily:'Playfair Display',transition:'fade',arrowSubstep:true,verticalMode:false,bgStyle:'ghost',bgBlend:'screen'};
+  const D={paraGap:.35,taglineScale:1,titleScale:1,imgDur:6,primaryColor:'#00d4ff',secondaryColor:'#a78bfa',bgDark:'#060810',fontFamily:'Space Grotesk',transition:'fade',arrowSubstep:true,verticalMode:false,bgStyle:'nebula',bgBlend:'color-dodge'};
   const saved=JSON.parse(localStorage.getItem('sd-cfg')||'{}');const C={...D,...saved};
   function apply(){const r=document.documentElement.style;r.setProperty('--para-gap',C.paraGap+'em');r.setProperty('--tagline-scale',C.taglineScale);r.setProperty('--title-scale',C.titleScale);r.setProperty('--teal',C.primaryColor);r.setProperty('--purple',C.secondaryColor);r.setProperty('--bg-dark',C.bgDark);r.setProperty('--bg',C.bgDark);if(C.fontFamily&&C.fontFamily!=='Custom')r.setProperty('--font',`'${C.fontFamily}',system-ui,sans-serif`);else if(C.customFont)r.setProperty('--font',`'${C.customFont}',system-ui,sans-serif`);window._globalImageDuration=C.imgDur*1000;window._arrowSubstep=C.arrowSubstep;const vForced=new URLSearchParams(location.search).has('vertical');document.body.classList.toggle('vertical-mode',!!C.verticalMode||vForced);window._verticalMode=!!C.verticalMode||vForced;document.body.dataset.bgStyle=C.bgStyle||'none';r.setProperty('--bg-blend',C.bgBlend||'screen');if(typeof aRender==='function')aRender();}
   apply();window._sdCfg=C;function save(){localStorage.setItem('sd-cfg',JSON.stringify(C));}
@@ -1322,13 +1323,15 @@ SECTIONS.forEach((sec,si)=>{
     } else if(c.layout==='placed'&&c.placedImages){
       // Placed layout — items positioned absolutely with original PPT coordinates (% of 16:9 stage)
       const items=c.placedImages.map(([src,l,t,w,h,op])=>{const tag=mediaTag(src);const st=op?tag.replace('>',` style="object-position:${op}">`):tag;return `<div class="placed-item" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%">${st}</div>`;}).join('');
-      const head=(c.title||c.subtitle)?`<div class="placed-overlay">${c.title?`<h3 class="placed-title">${c.title.replace(/\n/g,'<br>')}</h3>`:''}${c.subtitle?`<p class="placed-sub">${c.subtitle}</p>`:''}</div>`:'';
+      const ovS=c.overlayStyle?` style="${c.overlayStyle}"`:'';
+      const head=(c.title||c.subtitle)?`<div class="placed-overlay"${ovS}>${c.title?`<h3 class="placed-title">${c.title.replace(/\n/g,'<br>')}</h3>`:''}${c.subtitle?`<p class="placed-sub">${c.subtitle}</p>`:''}</div>`:'';
       s.innerHTML=`<div class="placed-stage">${items}</div>${head}`;
     } else if(c.layout==='orbit'){
       s.innerHTML='<div class="orbit-stage"></div>';
     } else if(c.layout==='full'&&c.img){
       // Full-bleed media + optional title overlay
-      s.innerHTML=`<div class="full-media">${mediaTag(c.img)}</div>${(c.title||c.subtitle)?`<div class="full-overlay">${c.title?`<h3 class="full-title">${c.title.replace(/\n/g,'<br>')}</h3>`:''}${c.subtitle?`<p class="full-sub">${c.subtitle}</p>`:''}</div>`:''}`;
+      const fullMedia=c.mediaScale?mediaTag(c.img).replace('>',` style="transform:scale(${c.mediaScale});transform-origin:center center">`):mediaTag(c.img);
+      s.innerHTML=`<div class="full-media">${fullMedia}</div>${(c.title||c.subtitle)?`<div class="full-overlay">${c.title?`<h3 class="full-title">${c.title.replace(/\n/g,'<br>')}</h3>`:''}${c.subtitle?`<p class="full-sub">${c.subtitle}</p>`:''}</div>`:''}`;
     } else if(c.layout==='carol-diagram'){
       s.innerHTML='<div class="carol-diagram-stage"></div>';
     } else {
@@ -1362,7 +1365,7 @@ SECTIONS.forEach((sec,si)=>{
   const lessonIV=lessons[3];if(!lessonIV)return;
   const t=lessonIV.querySelector('.lesson-title');
   const tl=lessonIV.querySelector('.lesson-tagline');
-  if(t)t.style.transform='translate(-7px,62px)';
+  if(t){t.style.position='absolute';t.style.left='34.0%';t.style.top='42.7%';t.style.margin='0';}
   if(tl)tl.style.display='none';
 })();
 
