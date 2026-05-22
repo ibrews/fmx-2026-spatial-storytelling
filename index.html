@@ -47,7 +47,7 @@ const SECTIONS = [
         notes:'Agile Lens is an XR studio in New York City, celebrating 10 years, at least according to LinkedIn. We\u2019ve been called an XR Strike Team, Unreal Engine technical wizards, all sorts of nice things, and we take a lot of pride in our ability to solve hard problems with emerging tech.' },
       { title:'', subtitle:'',
         layout:'grid', gridCover:true,
-        images:['media/fmx/s12-00-e408f437.png','media/fmx/s12-01-27d78baf.png','media/fmx/s12-05-f87a3b70.png','media/fmx/s12-03-14438ab8.png','media/fmx/s12-04-5293076f.png','media/fmx/s12-02-6f729576.png',['media/fmx/s13-02-b52f17b6.jpg','center bottom'],'media/fmx/BPI_04.jpg','media/fmx/brockman.mp4'],
+        images:['media/fmx/s12-00-e408f437.png',['media/fmx/s12-01-27d78baf.png','55.5% 13.9%'],['media/fmx/s12-05-f87a3b70.png','50.0% 52.1%'],['media/fmx/s12-03-14438ab8.png','53.3% 12.1%'],'media/fmx/s12-04-5293076f.png',['media/fmx/s12-02-6f729576.png','50.5% 0.0%'],['media/fmx/s13-02-b52f17b6.jpg','50.9% 80.6%'],['media/fmx/BPI_04.jpg','65.1% 0.0%'],['media/fmx/brockman.mp4','50.7% 44.1%']],
         notes:'The company formed with a mission to fully investigate the power of this emerging medium, particularly for architecture and live shows. Agile Lens makes its money from client work \u2014 enterprise training, B2B, luxury real estate, architecture, pre-construction VR. And then we funnel the discoveries we make in researching and building solutions for those clients downstream into what we\u2019re really passionate about: spatial storytelling and experimenting with liveness.' },
       { title:'Tech Prototypes \u00b7 Social Impact\nArchitecture \u00b7 Real Estate\nTraining \u00b7 Theatre', subtitle:'',
         gridCover:true,
@@ -1312,13 +1312,13 @@ SECTIONS.forEach((sec,si)=>{
     } else if(c.layout==='grid'&&c.images&&c.images.length){
       // Grid layout — multi-image artful arrangement
       const n=c.images.length;
-      const items=c.images.map(src=>{const [s,pos]=Array.isArray(src)?src:[src,null];const sty=pos?` style="object-position:${pos}"`:'';return `<div class="grid-item">${mediaTag(s).replace(/>$/,`${sty}>`)}</div>`;}).join('');
+      const items=c.images.map(src=>{const [s,pos]=Array.isArray(src)?src:[src,null];const sty=pos?` style="object-position:${pos}"`:'';return `<div class="grid-item">${mediaTag(s).replace('>',`${sty}>`)}</div>`;}).join('');
       const head=(c.title||c.subtitle)?`<div class="grid-head">${c.title?`<h3 class="grid-title">${c.title.replace(/\n/g,'<br>')}</h3>`:''}${c.subtitle?`<p class="grid-sub">${c.subtitle}</p>`:''}</div>`:'';
       const cap=c.caption?`<div class="grid-caption">${c.caption}</div>`:'';
       s.innerHTML=`${head}<div class="fmx-grid fmx-grid--n${n}">${items}</div>${cap}`;
     } else if(c.layout==='placed'&&c.placedImages){
       // Placed layout — items positioned absolutely with original PPT coordinates (% of 16:9 stage)
-      const items=c.placedImages.map(([src,l,t,w,h,op])=>{const tag=mediaTag(src);const st=op?tag.replace(/>$/,` style="object-position:${op}">`):tag;return `<div class="placed-item" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%">${st}</div>`;}).join('');
+      const items=c.placedImages.map(([src,l,t,w,h,op])=>{const tag=mediaTag(src);const st=op?tag.replace('>',` style="object-position:${op}">`):tag;return `<div class="placed-item" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%">${st}</div>`;}).join('');
       const head=(c.title||c.subtitle)?`<div class="placed-overlay">${c.title?`<h3 class="placed-title">${c.title.replace(/\n/g,'<br>')}</h3>`:''}${c.subtitle?`<p class="placed-sub">${c.subtitle}</p>`:''}</div>`:'';
       s.innerHTML=`<div class="placed-stage">${items}</div>${head}`;
     } else if(c.layout==='orbit'){
