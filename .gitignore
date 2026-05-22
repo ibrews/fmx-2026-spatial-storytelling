@@ -2,7 +2,9 @@ notes-config.json
 extracted.json
 .DS_Store
 *.pptx
-.claude/
+.claude/agent-memory/
+.claude/launch.json
+.claude/settings.local.json
 media/fmx/slide*-video-*.mp4
 media/fmx/s06-00-b5d37188.gif
 media/fmx/s09-00-604b39a4.gif
