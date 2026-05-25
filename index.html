@@ -1162,7 +1162,7 @@ const slideSteps=new Map();
 // SFX
 const _activeAudioCtxs=new Set();
 {const _OAC=window.AudioContext||window.webkitAudioContext;const _PAC=function(...a){const c=new _OAC(...a);_activeAudioCtxs.add(c);const oc=c.close.bind(c);c.close=function(){_activeAudioCtxs.delete(c);return oc();};return c;};_PAC.prototype=_OAC.prototype;window.AudioContext=_PAC;if(window.webkitAudioContext)window.webkitAudioContext=_PAC;}
-window._killAllSfx=function(){_activeAudioCtxs.forEach(c=>{try{c.close();}catch(e){}});_activeAudioCtxs.clear();};
+window._killAllSfx=function(){_activeAudioCtxs.forEach(c=>{try{c.close();}catch(e){}});_activeAudioCtxs.clear();_sfxCtx=null;_introAudioCtx=null;_fbAudioCtx=null;_tallyAudioCtx=null;(window._sfxKillHooks||[]).forEach(fn=>{try{fn();}catch(e){}});};window._sfxKillHooks=[];
 let _sfxCtx=null;
 function sfxCtx(){if(!_sfxCtx)_sfxCtx=new(window.AudioContext||window.webkitAudioContext)();if(_sfxCtx.state==='suspended')_sfxCtx.resume();return _sfxCtx;}
 function playWhoosh(){try{const c=sfxCtx(),t=c.currentTime;const bufLen=c.sampleRate*0.25;const buf=c.createBuffer(1,bufLen,c.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<bufLen;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=buf;const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=900;bp.Q.value=0.6;const g=c.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.08,t+0.04);g.gain.exponentialRampToValueAtTime(0.001,t+0.22);s.connect(bp);bp.connect(g);g.connect(c.destination);s.start(t);s.stop(t+0.25);}catch(e){}}
@@ -1814,7 +1814,9 @@ function shootFireball(svg,startX,startY,dir){
   // Hum oscillators
   let _humCtx=null,_humOscs=[],_humGain=null;
   function startHum(){try{if(!_humCtx)_humCtx=new(window.AudioContext||window.webkitAudioContext)();if(_humCtx.state==='suspended')_humCtx.resume();_humOscs.forEach(o=>{try{o.stop();}catch(e){}});_humOscs=[];_humGain=_humCtx.createGain();_humGain.gain.value=0;_humGain.connect(_humCtx.destination);[[68,'sine',1.0],[136,'sine',.55],[204,'sine',.25]].forEach(([freq,type,rel])=>{const o=_humCtx.createOscillator();const g=_humCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.value=rel;o.connect(g);g.connect(_humGain);o.start();_humOscs.push(o);});_humGain.gain.setValueAtTime(0,_humCtx.currentTime);_humGain.gain.linearRampToValueAtTime(0.091,_humCtx.currentTime+1.2);}catch(e){}}
-  function stopHum(){try{if(_humGain&&_humCtx){_humGain.gain.setValueAtTime(_humGain.gain.value,_humCtx.currentTime);_humGain.gain.linearRampToValueAtTime(0,_humCtx.currentTime+.6);const o=_humOscs;_humOscs=[];setTimeout(()=>o.forEach(x=>{try{x.stop();}catch(e){}}),.700);}}catch(e){}}
+  function stopHum(){try{if(_humGain&&_humCtx){_humGain.gain.setValueAtTime(_humGain.gain.value,_humCtx.currentTime);_humGain.gain.linearRampToValueAtTime(0,_humCtx.currentTime+.6);const o=_humOscs;_humOscs=[];setTimeout(()=>o.forEach(x=>{try{x.stop();}catch(e){}}),700);}}catch(e){}}
+  // Register a hard-kill hook so _killAllSfx can stop us immediately on slide change
+  (window._sfxKillHooks=window._sfxKillHooks||[]).push(()=>{lensRunning=false;_humOscs.forEach(o=>{try{o.stop();}catch(e){}});_humOscs=[];_humGain=null;_humCtx=null;});
 
   // Animate
   let lensRunning=false,lensAngle=0,lensT=0;
@@ -1960,7 +1962,9 @@ function shootFireball(svg,startX,startY,dir){
   let running=false,tid=null,qi=0,order=[];
   function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
   // Popcorn burst — small gold flecks that pop outward when a quote lands
+  function popcornPop(){try{const c=new(window.AudioContext||window.webkitAudioContext)();const t=c.currentTime;const bufLen=Math.floor(c.sampleRate*0.04);const buf=c.createBuffer(1,bufLen,c.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<bufLen;i++){d[i]=(Math.random()*2-1)*Math.pow(1-i/bufLen,2);}const s=c.createBufferSource();s.buffer=buf;const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1800+Math.random()*1200;bp.Q.value=4;const g=c.createGain();g.gain.setValueAtTime(0.18,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.06);s.connect(bp);bp.connect(g);g.connect(c.destination);s.start(t);s.stop(t+0.08);setTimeout(()=>{try{c.close();}catch(e){}},150);}catch(e){}}
   function popcornBurst(x,y,intensity){
+    popcornPop();
     const N=intensity||(7+Math.floor(Math.random()*4));
     for(let i=0;i<N;i++){
       const p=document.createElement('div');
