@@ -90,7 +90,7 @@ const SECTIONS = [
         layout:'big', bigText:'What can technology\nlearn from\nfront-row live\nentertainment?',
         notes:'Could there ever be a way to democratize that incredibly rarified experience?' },
       { title:'', subtitle:'',
-        layout:'full', img:'media/fmx/s24-withIRL.mp4', audioUnmuted:true,
+        layout:'full', img:'media/fmx/s24-withIRL.mp4',
         notes:'Flash forward to 2021.' }
     ] },
 
@@ -1300,7 +1300,7 @@ SECTIONS.forEach((sec,si)=>{
   if(si===0){deck.appendChild(topicsS);allSlides.push(topicsS);} // Topics after Lesson I
   sec.cases.forEach(c=>{
     const s=document.createElement('div');s.className=`slide case-slide${ac}${c.layout?' layout-'+c.layout:''}${c.gridCover?' grid-cover':''}`;s.dataset.type='case';s.dataset.year=sec.year;s.dataset.section=si;
-    const mediaTag=src=>/\.(mp4|webm|mov)$/i.test(src)?`<video src="${src}" autoplay loop ${c.audioUnmuted?'':'muted '}playsinline preload="none"${c.audioUnmuted?' data-default-unmuted="1"':''}></video>`:`<img src="${src}" loading="lazy">`;
+    const mediaTag=src=>/\.(mp4|webm|mov)$/i.test(src)?`<video src="${src}" autoplay loop ${c.audioMuted?'muted ':''}playsinline preload="none"${c.audioMuted?' data-default-muted="1"':''}></video>`:`<img src="${src}" loading="lazy">`;
     if(c.layout==='intro-hxr'){
       s.innerHTML=`<div class="intro-grid"><div class="intro-stage"><svg viewBox="0 0 400 400" id="intro-alex-svg"></svg></div><div class="intro-content"><div class="intro-eyebrow" id="intro-eyebrow" style="opacity:0;transition:opacity .6s">Speaker</div><h1 class="intro-title" id="intro-title" style="opacity:0;transition:opacity .6s">Alex<br>Coulombe</h1><p class="intro-sub" id="intro-sub" style="opacity:0;transition:opacity .6s">Founder of Agile Lens. Architect turned XR-chitect who has spent the last decade building spatial experiences for the world's most ambitious clients.</p><p class="intro-sub" id="intro-sub-ue5" style="opacity:0;transition:opacity .6s;margin-top:.6em">Gold authorized UE5 instructor, silver authorized training center. Host of Unreal NYC &amp; frequent Unreal Fest speaker.</p><div class="intro-stats" id="intro-stats-row" style="opacity:0;transition:opacity .6s"><div class="intro-stat"><span class="num">16</span><span class="lbl">Years in XR</span></div><div class="intro-stat"><span class="num">10</span><span class="lbl">Years at Agile Lens</span></div><div class="intro-stat"><span class="num">8</span><span class="lbl">Years in Unreal</span></div><div class="intro-stat"><span class="num">100+</span><span class="lbl">Projects Shipped</span></div></div></div></div>`;
     } else if(c.layout==='sprite'){
@@ -1338,7 +1338,7 @@ SECTIONS.forEach((sec,si)=>{
         const iframeSrc=c.img.slice(7);
         imgHTML=`<iframe src="${iframeSrc}" style="width:100%;height:100%;border:none;border-radius:18px" allow="autoplay;fullscreen;xr-spatial-tracking" allowfullscreen></iframe>`;
       } else if(c.img&&/\.(mp4|webm|mov)$/i.test(c.img)){
-        imgHTML=`<video src="${c.img}" autoplay loop ${c.audioUnmuted?'':'muted '}playsinline preload="none"${c.audioUnmuted?' data-default-unmuted="1"':''} style="width:100%;height:100%;object-fit:cover;border-radius:18px"></video>`;
+        imgHTML=`<video src="${c.img}" autoplay loop ${c.audioMuted?'muted ':''}playsinline preload="none"${c.audioMuted?' data-default-muted="1"':''} style="width:100%;height:100%;object-fit:cover;border-radius:18px"></video>`;
       } else if(c.img&&c.img!=='MEDIA_CYCLER'){
         imgHTML=`<img src="${c.img}" loading="lazy" style="border-radius:18px">`;
       } else if(c.img==='MEDIA_CYCLER'){
@@ -2192,7 +2192,7 @@ window._hidePlaying=function(){if(_playingTimer){clearTimeout(_playingTimer);_pl
 // Browser autoplay can stall; calling play() explicitly per slide change is reliable.
 function _updateMuteBtn(){const btn=document.getElementById('btn-mute');if(!btn)return;const videos=allSlides[current]?.querySelectorAll('video');if(!videos||!videos.length){btn.style.display='none';return;}btn.style.display='';const muted=videos[0].muted;btn.textContent=muted?'🔇':'🔊';btn.title=muted?'Unmute audio':'Mute audio';}
 document.getElementById('btn-mute').addEventListener('click',()=>{const videos=allSlides[current]?.querySelectorAll('video');if(!videos)return;const nowMuted=videos[0].muted;videos.forEach(v=>v.muted=!nowMuted);_updateMuteBtn();});
-{const _og2=goTo;goTo=function(n){_og2(n);allSlides.forEach((sl,i)=>{sl.querySelectorAll('video').forEach(v=>{if(i===current){try{v.muted=!v.dataset.defaultUnmuted;const p=v.play();if(p)p.catch(()=>{v.addEventListener('canplay',()=>{v.play().catch(()=>{});},{once:true});});}catch(e){}}else{try{v.pause();}catch(e){}}});});_updateMuteBtn();};
+{const _og2=goTo;goTo=function(n){_og2(n);allSlides.forEach((sl,i)=>{sl.querySelectorAll('video').forEach(v=>{if(i===current){try{v.muted=!!v.dataset.defaultMuted;const p=v.play();if(p)p.catch(()=>{v.addEventListener('canplay',()=>{v.play().catch(()=>{});},{once:true});});}catch(e){}}else{try{v.pause();}catch(e){}}});});_updateMuteBtn();};
 const _oa=advanceStep;advanceStep=function(){const r=_oa();if(r)window._showPlaying(3000);else window._hidePlaying();return r;};}
 let _apt=null;const _apc=document.getElementById('autoplay-cb');
 function _apTick(){if(!_apc.checked)return;if(!advanceStep()){const n=nextVisible(current,1);if(n>=0)goTo(n);else{_apc.checked=false;return;}}const t=allSlides[current]?.dataset.type;_apt=setTimeout(_apTick,t==='lesson'||t==='bonus'?8000:t==='case'?12000:6000);}
