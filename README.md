@@ -90,3 +90,7 @@ git merge upstream/main
 - Talk slot: FMX 2026, Spatial Storytelling track, alongside Numena · Innerspace · Liminal.
 - Companion talks: NXT BLD 2026 (Blueprint Immersive) — separate fork.
 - Original keynote that spawned this framework: [HXR 2026](https://ibrews.github.io/harvardxr-keynote/).
+
+## Support
+
+If you like seeing this kind of thing get built and shared, [donations are always welcome](https://www.alexcoulombepresents.com/support) — they buy hardware, render time, and the freedom to keep giving most of this away.
